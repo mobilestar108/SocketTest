@@ -6,8 +6,13 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URISyntaxException;
 
+import io.socket.client.Ack;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
@@ -59,6 +64,44 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.e("SocketEvent", "Socket Connected");
+
+            try {
+                JSONObject rider = new JSONObject();
+                rider.put("email", "test@testuser.com");
+                rider.put("password", "123456");
+                rider.put("userType", "rider");
+                rider.put("fname", "Loredana");
+                rider.put("lname", "Zamfir");
+                rider.put("phoneNo", "1112223344");
+
+                JSONObject tripRequest = new JSONObject();
+                tripRequest.put("srcLoc", "[25, 26]");
+                tripRequest.put("destLoc", "[27, 28]");
+                tripRequest.put("pickUpAddress", "geekyants");
+                tripRequest.put("destAddress", "bommanahalli");
+                tripRequest.put("latitudeDelta", 0.123);
+                tripRequest.put("longitudeDelta", 0.023);
+
+                JSONObject payload = new JSONObject();
+                payload.put("rider", rider);
+                payload.put("tripRequest", tripRequest);
+
+                ioSocket.emit("requestTrip", payload);
+//                ioSocket.emit("requestTrip", payload, new Ack() {
+//                    @Override
+//                    public void call(Object... args) {
+//                        Log.e("SocketEvent", "Response");
+//                    }
+//                });
+                ioSocket.on("tripRequestUpdated", new Emitter.Listener() {
+                    @Override
+                    public void call(Object... args) {
+                        Log.e("SocketEvent", "Request Trip Event");
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     };
 
@@ -80,6 +123,13 @@ public class SocketService extends Service {
         @Override
         public void call(Object... args) {
             Log.e("SocketEvent", "Socket Connect Error");
+        }
+    };
+
+    private Emitter.Listener onRequestTrip = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            Log.e("SocketEvent", "Request Trip");
         }
     };
 
