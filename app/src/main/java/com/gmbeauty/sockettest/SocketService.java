@@ -67,6 +67,7 @@ public class SocketService extends Service {
 
             try {
                 JSONObject rider = new JSONObject();
+                rider.put("_id", "58b1a60c098db06645af5bee");
                 rider.put("email", "test@testuser.com");
                 rider.put("password", "123456");
                 rider.put("userType", "rider");
