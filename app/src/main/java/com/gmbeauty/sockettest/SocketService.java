@@ -79,7 +79,7 @@ public class SocketService extends Service {
                 tripRequest.put("destLoc", "[27, 28]");
                 tripRequest.put("pickUpAddress", "geekyants");
                 tripRequest.put("destAddress", "bommanahalli");
-                tripRequest.put("latitudeDelta", 0.123);
+                tripRequest.put("latitudeDelta", 0.022);
                 tripRequest.put("longitudeDelta", 0.023);
 
                 JSONObject payload = new JSONObject();
